@@ -3,16 +3,16 @@
 require "spec_helper"
 
 RSpec.describe UpdatePackagePrice do
-  it "updates the current price of the provided package" do
-    package = Package.create!(name: "Dunderhonung")
+  let(:stockholm) { Municipality.create!(name: "Stockholm") }
+  let(:package) { Package.create!(name: "Dunderhonung", municipality: stockholm) }
 
+  it "updates the current price of the provided package" do
     UpdatePackagePrice.call(package, 200_00)
     expect(package.reload.amount_cents).to eq(200_00)
   end
 
   it "only updates the passed package price" do
-    package = Package.create!(name: "Dunderhonung")
-    other_package = Package.create!(name: "Farmors köttbullar", amount_cents: 100_00)
+    other_package = Package.create!(name: "Farmors köttbullar", amount_cents: 100_00, municipality: stockholm)
 
     expect {
       UpdatePackagePrice.call(package, 200_00)
@@ -22,7 +22,7 @@ RSpec.describe UpdatePackagePrice do
   end
 
   it "stores the old price of the provided package in its price history" do
-    package = Package.create!(name: "Dunderhonung", amount_cents: 100_00)
+    package.update!(amount_cents: 100_00)
 
     UpdatePackagePrice.call(package, 200_00)
     expect(package.prices).to be_one
