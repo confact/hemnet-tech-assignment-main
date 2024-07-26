@@ -1,0 +1,26 @@
+version: 2.1
+
+orbs:
+  ruby: circleci/ruby@2.0.1
+
+jobs:
+  build:
+    resource_class: small
+    parallelism: 1
+    docker:
+      - image: cimg/ruby:3.3.1
+    executor: ruby/default
+    steps:
+      - checkout
+      - run:
+          name: Which bundler?
+          command: bundle -v
+      - ruby/install-deps
+      - run:
+          name: Run RSpec
+          command: bundle exec rspec
+
+workflows:
+  Rails tests:
+    jobs:
+      - build
