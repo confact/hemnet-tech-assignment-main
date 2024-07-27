@@ -16,20 +16,22 @@ RSpec.describe PriceHistory do
     Price.create!(package: package_bas, amount_cents: 100_00, municipality: goteborg, created_at: "2023-06-01")
   end
 
-  it "raises an error if the year is not valid" do
-    expect { described_class.call(year: "202", package: package_premium.name) }.to raise_error(ArgumentError)
-  end
+  context "error handling" do
+    it "raises an error if the year is not valid" do
+      expect { described_class.call(year: "202", package: package_premium.name) }.to raise_error(ArgumentError)
+    end
 
-  it "raises an error if the package is not a string" do
-    expect { described_class.call(year: "2023", package: 123) }.to raise_error(ArgumentError)
-  end
+    it "raises an error if the package is not a string" do
+      expect { described_class.call(year: "2023", package: 123) }.to raise_error(ArgumentError)
+    end
 
-  it "raises an error if the year is not filled" do
-    expect { described_class.call(package: package_premium.name) }.to raise_error(ArgumentError)
-  end
+    it "raises an error if the year is not filled" do
+      expect { described_class.call(package: package_premium.name) }.to raise_error(ArgumentError)
+    end
 
-  it "raises an error if the package is not filled" do
-    expect { described_class.call(year: "2023") }.to raise_error(ArgumentError)
+    it "raises an error if the package is not filled" do
+      expect { described_class.call(year: "2023") }.to raise_error(ArgumentError)
+    end
   end
 
   it "fetches price history for a package in a given year" do
