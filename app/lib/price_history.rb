@@ -25,5 +25,9 @@ class PriceHistory
     prices.group_by { |price| price.municipality.name }.transform_values do |prices|
       prices.map { |price| price.amount_cents }
     end
+
+    # alternative implementation:
+    # if the database was postgres we could use array_agg to return the amounts in an array, like (not tested):
+    # Price.joins(:municipality).where(created_at: start_date..end_date, package: package).group("municipalities.name").pluck("array_agg(amount_cents)")
   end
 end
