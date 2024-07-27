@@ -62,4 +62,18 @@ RSpec.describe PriceHistory do
 
     expect(result).to eq({})
   end
+
+  context "when municipality is not set on the price" do
+    it "includes the price in the 'Unknown' group" do
+      Price.create!(package: package_premium, amount_cents: 200_00, created_at: "2023-12-24")
+
+      result = described_class.call(year: "2023", package: package_premium.name)
+
+      expect(result).to eq({
+        "Stockholm" => [100_00, 125_00, 175_00],
+        "Göteborg" => [50_00, 75_00],
+        "Unknown" => [200_00]
+      })
+    end
+  end
 end

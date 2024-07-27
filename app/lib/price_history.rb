@@ -22,7 +22,7 @@ class PriceHistory
 
     # Group prices by municipality and return the amounts
     # in an array
-    prices.group_by { |price| price.municipality.name }.transform_values do |prices|
+    prices.group_by { |price| price.municipality&.name || "Unknown" }.transform_values do |prices|
       prices.map { |price| price.amount_cents }
     end
 
